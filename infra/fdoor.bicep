@@ -205,4 +205,7 @@ resource FrontDoorEndpointfd_default_route 'Microsoft.Cdn/profiles/afdendpoints/
     httpsRedirect: 'Enabled'
     enabledState: 'Enabled'
   }
+  dependsOn: [
+    FrontDoorName_default_origin_group_OWASP
+  ]
 }
