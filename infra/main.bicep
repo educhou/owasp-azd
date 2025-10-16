@@ -21,6 +21,7 @@ param currentUserId string = newGuid()
 
 var tags = {
   'azd-env-name': environmentName
+  SecurityControl: 'Ignore'
 }
 
 var abbrs = loadJsonContent('./abbreviations.json')
@@ -39,6 +40,7 @@ module wrks 'workspacedeploy.bicep' = {
   params: {
     workspaceName: '${abbrs.networkVirtualNetworks}${resourceToken}'
     location: location
+    tags: tags
   }
 }
 
@@ -84,6 +86,7 @@ module vent 'vnet.bicep' = {
     DefaultPassword: vmAdminPass
     DefaultUserName: vmAdminUser
     location: location
+    tags: tags
   }
 }
 
@@ -94,6 +97,7 @@ module fdoor 'fdoor.bicep' = {
   params: {
     FrontdoorPolicyName: 'SOCNSFDPolicy'
     publicIpAddress: vent.outputs.AG_PIP
+    tags: tags
   }
 }
 
@@ -107,6 +111,7 @@ module bastion 'bastion.bicep' = {
     vnetID1: vent.outputs.SPOKE1VNET_ID
     vnetID2: vent.outputs.SPOKE2VNET_ID
     location: location
+    tags: tags
   }
 }
 

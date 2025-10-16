@@ -14,6 +14,9 @@ param DefaultPassword string = ''
 @description('Provide the workspace ID')
 param Workspaceid string
 
+@description('Tags to apply to all resources')
+param tags object = {}
+
 var VN_Name1 = 'VN-HUB-${envName}'
 var VN_Name2 = 'VN-SPOKE1-${envName}'
 var VN_Name3 = 'VN-SPOKE2-${envName}'
@@ -79,7 +82,7 @@ var VM_Name3 = 'VM-Win2019'
 resource AG 'Microsoft.Network/applicationGateways@2020-04-01' = {
   name: AG_Name
   location: location
-  tags: {}
+  tags: tags
   properties: {
     sku: {
       name: 'WAF_v2'
@@ -229,7 +232,7 @@ resource applicationGatewayDiagnosticSettings 'Microsoft.Insights/diagnosticSett
 resource AppGatewayPolicy 'Microsoft.Network/applicationGatewayWebApplicationFirewallPolicies@2019-09-01' = {
   name: AppGatewayPolicyName
   location: location
-  tags: {}
+  tags: tags
   properties: {
     customRules: [
       {
@@ -340,9 +343,9 @@ resource variables_DDoSPlan 'Microsoft.Network/ddosProtectionPlans@2020-04-01' =
 resource VN_1 'Microsoft.Network/virtualNetworks@2020-03-01' = {
   name: VN_Name1
   location: location
-  tags: {
+  tags: union(tags, {
     displayName: VN_Name1
-  }
+  })
   properties: {
     addressSpace: {
       addressPrefixes: [
@@ -394,9 +397,9 @@ resource VN_Name1_microsoft_insights_VN1Diagnostics 'microsoft.insights/diagnost
 resource VN_2 'Microsoft.Network/virtualNetworks@2020-03-01' = {
   name: VN_Name2
   location: location
-  tags: {
+  tags: union(tags, {
     displayName: VN_Name2
-  }
+  })
   properties: {
     addressSpace: {
       addressPrefixes: [
@@ -461,9 +464,9 @@ resource VN_Name2_microsoft_insights_VN2Diagnostics 'microsoft.insights/diagnost
 resource VN_3 'Microsoft.Network/virtualNetworks@2020-03-01' = {
   name: VN_Name3
   location: location
-  tags: {
+  tags: union(tags, {
     displayName: VN_Name3
-  }
+  })
   properties: {
     addressSpace: {
       addressPrefixes: [
@@ -625,7 +628,7 @@ resource VN_Name3_VN_Name3_Peering_To_VN_NAME1 'Microsoft.Network/virtualNetwork
 resource publicIpAddress1 'Microsoft.Network/publicIpAddresses@2019-02-01' = {
   name: publicIpAddressName1
   location: location
-  tags: {}
+  tags: tags
   sku: {
     name: 'Standard'
   }
@@ -661,7 +664,7 @@ resource publicIpAddressName1_microsoft_insights_PIP1Diagnostics 'microsoft.insi
 resource publicIpAddress2 'Microsoft.Network/publicIpAddresses@2019-02-01' = {
   name: publicIpAddressName2
   location: location
-  tags: {}
+  tags: tags
   sku: {
     name: 'Standard'
   }
@@ -697,7 +700,7 @@ resource publicIpAddressName2_microsoft_insights_PIP2Diagnostics 'microsoft.insi
 resource FW 'Microsoft.Network/azureFirewalls@2019-11-01' = {
   name: FW_Name
   location: location
-  tags: {}
+  tags: tags
   properties: {
     threatIntelMode: 'Deny'
     ipConfigurations: [
@@ -762,7 +765,7 @@ resource FW_Name_microsoft_insights_FirewallDiagnostics 'Microsoft.Insights/diag
 resource firewallPolicy 'Microsoft.Network/firewallPolicies@2019-06-01' = {
   name: firewallPolicyName
   location: location
-  tags: {}
+  tags: tags
   properties: {
     threatIntelMode: 'Deny'
   }
@@ -1006,7 +1009,7 @@ resource RT_1 'Microsoft.Network/routeTables@2019-02-01' = {
 resource NSG_1 'Microsoft.Network/networkSecurityGroups@2020-04-01' = {
   name: NSG_Name1
   location: location
-  tags: {}
+  tags: tags
   properties: {
     securityRules: [
       {
@@ -1069,7 +1072,7 @@ resource NSG_Name1_microsoft_insights_NSG1Diagnostics 'microsoft.insights/diagno
 resource NSG_2 'Microsoft.Network/networkSecurityGroups@2020-04-01' = {
   name: NSG_Name2
   location: location
-  tags: {}
+  tags: tags
   properties: {
     securityRules: [
       {
@@ -1131,7 +1134,7 @@ resource NSG_Name2_microsoft_insights_NSG2Diagnostics 'microsoft.insights/diagno
 resource Site_1 'Microsoft.Web/sites@2018-11-01' = {
   name: Site_Name1
   location: location
-  tags: {}
+  tags: tags
   properties: {
     siteConfig: {
       appSettings: [
@@ -1156,6 +1159,7 @@ resource Site_1 'Microsoft.Web/sites@2018-11-01' = {
 resource Site_HPN 'Microsoft.Web/serverfarms@2018-02-01' = {
   name: Site_HPN_var
   location: location
+  tags: tags
   sku: {
     tier: 'Basic'
     name: 'B1'
@@ -1171,6 +1175,7 @@ resource Site_HPN 'Microsoft.Web/serverfarms@2018-02-01' = {
 resource NIC_1 'Microsoft.Network/networkInterfaces@2019-07-01' = {
   name: NIC_Name1
   location: location
+  tags: tags
   properties: {
     ipConfigurations: [
       {
@@ -1190,6 +1195,7 @@ resource NIC_1 'Microsoft.Network/networkInterfaces@2019-07-01' = {
 resource NIC_2 'Microsoft.Network/networkInterfaces@2019-07-01' = {
   name: NIC_Name2
   location: location
+  tags: tags
   properties: {
     ipConfigurations: [
       {
@@ -1209,6 +1215,7 @@ resource NIC_2 'Microsoft.Network/networkInterfaces@2019-07-01' = {
 resource NIC_3 'Microsoft.Network/networkInterfaces@2019-07-01' = {
   name: NIC_Name3
   location: location
+  tags: tags
   properties: {
     ipConfigurations: [
       {
@@ -1228,6 +1235,7 @@ resource NIC_3 'Microsoft.Network/networkInterfaces@2019-07-01' = {
 resource VM_1 'Microsoft.Compute/virtualMachines@2019-07-01' = {
   name: VM_Name1
   location: location
+  tags: tags
   properties: {
     hardwareProfile: {
       vmSize: 'Standard_D2s_v3'
@@ -1269,6 +1277,7 @@ resource VM_1 'Microsoft.Compute/virtualMachines@2019-07-01' = {
 resource VM_3 'Microsoft.Compute/virtualMachines@2019-07-01' = {
   name: VM_Name3
   location: location
+  tags: tags
   properties: {
     hardwareProfile: {
       vmSize: 'Standard_D2s_v3'
