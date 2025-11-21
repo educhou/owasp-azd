@@ -1,5 +1,6 @@
 param FrontdoorPolicyName string = 'FrontDoorWafPolicy'
 param publicIpAddress string = ''
+param tags object = {}
 
 var FrontDoorName  = 'Demowasp-${uniqueString(resourceGroup().id)}'
 
@@ -7,6 +8,7 @@ var FrontDoorName  = 'Demowasp-${uniqueString(resourceGroup().id)}'
 resource FrontDoorWafPolicy 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@2024-02-01' = {
   name: FrontdoorPolicyName
   location: 'Global'
+  tags: tags
   sku: {
     name: 'Standard_AzureFrontDoor'
   }
@@ -104,6 +106,7 @@ resource FrontDoorWafPolicy 'Microsoft.Network/frontdoorwebapplicationfirewallpo
 resource FrontDoor 'Microsoft.Cdn/profiles@2025-04-15' = {
   name: FrontDoorName
   location: 'Global'
+  tags: tags
   sku: {
     name: 'Standard_AzureFrontDoor'
   }
@@ -202,4 +205,7 @@ resource FrontDoorEndpointfd_default_route 'Microsoft.Cdn/profiles/afdendpoints/
     httpsRedirect: 'Enabled'
     enabledState: 'Enabled'
   }
+  dependsOn: [
+    FrontDoorName_default_origin_group_OWASP
+  ]
 }

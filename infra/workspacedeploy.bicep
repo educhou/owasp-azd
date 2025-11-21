@@ -26,9 +26,13 @@ param resourcePermissions bool = true
 @description('Specify the number of days to retain data in Heartbeat table.')
 param heartbeatTableRetention int = 120
 
+@description('Tags to apply to all resources')
+param tags object = {}
+
 resource workspace 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' = {
   name: workspaceName
   location: location
+  tags: tags
   properties: {
     sku: {
       name: sku
